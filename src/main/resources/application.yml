@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gestao-projetos
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/GESTAO_PROJETOS
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
