@@ -2,13 +2,12 @@ package br.com.paulobarros.service;
 
 import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
-import br.com.paulobarros.model.Projeto;
 import br.com.paulobarros.model.enums.ClassificacaoRiscoEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class ClassificacaoRiscoService {
@@ -19,7 +18,7 @@ public class ClassificacaoRiscoService {
         LocalDate previsaoTermino = projeto.getDataPrevisaoTermino();
         BigDecimal orcamento = projeto.getOrcamentoTotal();
 
-        long prazoEmMeses = previsaoTermino.toEpochDay() - inicio.toEpochDay();
+        long prazoEmMeses = calcularPrazoEmMeses(inicio, previsaoTermino);
         ClassificacaoRiscoEnum classificacao = calcularClassificacao(orcamento, prazoEmMeses);
 
         ClassificacaoRiscoDTO dto = new ClassificacaoRiscoDTO();
@@ -30,6 +29,14 @@ public class ClassificacaoRiscoService {
         dto.setClassificacao(classificacao);
 
         return dto;
+    }
+
+    private long calcularPrazoEmMeses(LocalDate inicio, LocalDate fim) {
+        long meses = ChronoUnit.MONTHS.between(inicio, fim);
+        if (inicio.plusMonths(meses).isBefore(fim)) {
+            meses++;
+        }
+        return meses;
     }
 
     private ClassificacaoRiscoEnum calcularClassificacao(BigDecimal orcamento, long prazoMeses) {
