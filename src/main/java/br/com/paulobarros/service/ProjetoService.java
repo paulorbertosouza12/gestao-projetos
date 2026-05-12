@@ -3,8 +3,10 @@ package br.com.paulobarros.service;
 
 import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
+import br.com.paulobarros.exception.BusinessException;
 import br.com.paulobarros.exception.RequiredObjectIsNullException;
 import br.com.paulobarros.model.Projeto;
+import br.com.paulobarros.model.enums.StatusProjetoEnum;
 import br.com.paulobarros.repository.ProjetoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +80,6 @@ public class ProjetoService {
         entity.setDataRealTermino(projeto.getDataRealTermino());
         entity.setDataPrevisaoTermino(projeto.getDataPrevisaoTermino());
         entity.setInicio(projeto.getInicio());
-        //entity.setResponsavel(projeto.getResponsavel());
 
         return parseObject(repository.save(entity), ProjetoDTO.class);
     }
@@ -86,19 +87,27 @@ public class ProjetoService {
     public void delete(Long id){
         logger.info("Deletando projeto por id: {}", id);
         Projeto entity = repository.findById(id).orElseThrow( () -> new IllegalArgumentException("Projeto não encontrado"));
+
+        validaExclusaoProjeto(entity);
+
         repository.delete(entity);
     }
 
-   public ClassificacaoRiscoDTO consultaClassificacaoRisco(Long id){
-        var projeto = findById(id);
+    private void validaExclusaoProjeto(Projeto projeto) {
+        var status = projeto.getStatus();
+        boolean statusExclusaoBloqueada =
+                StatusProjetoEnum.INICIADO.equals(status) ||
+                StatusProjetoEnum.ENCERRADO.equals(status) ||
+                StatusProjetoEnum.EM_ANDAMENTO.equals(status);
+        if (statusExclusaoBloqueada){
+            throw new BusinessException(
+                    String.format("Projeto com status '%s' não pode ser excluído.", status.getDescricao()));
+        }
+    }
 
-        return null;
-   }
 
     public ClassificacaoRiscoDTO calcularClassificacaoRisco(Long idProjeto) {
-
         ProjetoDTO projeto = findById(idProjeto);
-
        return classificacaoRiscoService.calcular(projeto);
     }
 }
