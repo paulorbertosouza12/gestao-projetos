@@ -1,6 +1,7 @@
 package br.com.paulobarros.service;
 
 
+import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
 import br.com.paulobarros.exception.RequiredObjectIsNullException;
 import br.com.paulobarros.model.Projeto;
@@ -22,6 +23,9 @@ public class ProjetoService {
 
     @Autowired
     private ProjetoRepository repository;
+
+    @Autowired
+    private  ClassificacaoRiscoService classificacaoRiscoService;
 
     public Page<ProjetoDTO> findAll(Pageable pageble){
         logger.info("Buscando todos os projetos");
@@ -85,4 +89,16 @@ public class ProjetoService {
         repository.delete(entity);
     }
 
+   public ClassificacaoRiscoDTO consultaClassificacaoRisco(Long id){
+        var projeto = findById(id);
+
+        return null;
+   }
+
+    public ClassificacaoRiscoDTO calcularClassificacaoRisco(Long idProjeto) {
+
+        ProjetoDTO projeto = findById(idProjeto);
+
+       return classificacaoRiscoService.calcular(projeto);
+    }
 }
