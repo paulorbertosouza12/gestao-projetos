@@ -2,6 +2,7 @@ package br.com.paulobarros.controllers;
 
 
 import br.com.paulobarros.controllers.docs.ProjetoControllerDocs;
+import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
 import br.com.paulobarros.service.ProjetoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,4 +68,12 @@ public class ProjetoController implements ProjetoControllerDocs {
         projetoService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(value = "/classificacao",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Override
+    public ClassificacaoRiscoDTO calcularClassificacaoRisco(@RequestParam Long idProjeto){
+        return projetoService.calcularClassificacaoRisco(idProjeto);
+    }
+
 }

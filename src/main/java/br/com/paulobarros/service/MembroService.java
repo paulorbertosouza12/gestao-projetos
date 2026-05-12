@@ -4,7 +4,6 @@ package br.com.paulobarros.service;
 import br.com.paulobarros.data.dto.MembroDTO;
 import br.com.paulobarros.exception.RequiredObjectIsNullException;
 import br.com.paulobarros.model.Membro;
-import br.com.paulobarros.model.Membro;
 import br.com.paulobarros.repository.MembroRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +28,9 @@ public class MembroService {
 
         var membros = repository.findAll(pageble);
 
-        var membrosDTO = membros.map(membro -> {
-            var dto = parseObject(membro,MembroDTO.class);
-            return dto;
+        return membros.map(membro -> {
+            return parseObject(membro,MembroDTO.class);
         });
-
-        return membrosDTO;
     }
 
 

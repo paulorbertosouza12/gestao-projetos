@@ -21,7 +21,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails admin = User
                 .withUsername("paulo")
-                .password("admin123")     // vai ser tratada pelo PasswordEncoder
+                .password("admin123")
                 .roles("ADMIN")
                 .build();
 
@@ -37,20 +37,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // para facilitar testes com Postman/Swagger
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // libera o Swagger, se você estiver usando
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**"
                         ).permitAll()
-                        // protege o restante da aplicação
                         .anyRequest().authenticated()
                 )
-                // formulário de login padrão do Spring
                 .httpBasic(Customizer.withDefaults())
-                // ou, se preferir: httpBasic(Customizer.withDefaults());
                 .logout(Customizer.withDefaults());
 
         return http.build();
