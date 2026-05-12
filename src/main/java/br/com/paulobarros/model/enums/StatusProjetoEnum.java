@@ -1,4 +1,4 @@
-package br.com.paulobarros.model;
+package br.com.paulobarros.model.enums;
 
 public enum StatusProjetoEnum {
 

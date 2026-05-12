@@ -1,5 +1,6 @@
 package br.com.paulobarros.model;
 
+import br.com.paulobarros.model.enums.StatusProjetoEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class Projeto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_projeto")
     private Long id;
 
     @Column(name = "nome", nullable = false, length = 80)
@@ -35,12 +37,18 @@ public class Projeto implements Serializable {
     @Column(name = "orcamento_total", nullable = false)
     private BigDecimal orcamentoTotal;
 
-    @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProjetoMembro> responsavel;
-
     @Column(name = "descricao", nullable = false, length = 255)
     private String descricao;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 30)
     private StatusProjetoEnum status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_gerente_responsavel", nullable = false)
+    private Membro gerenteResponsavel;
+
+    @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProjetoMembro> membros;
+
 }

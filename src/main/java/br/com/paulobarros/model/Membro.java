@@ -1,5 +1,6 @@
 package br.com.paulobarros.model;
 
+import br.com.paulobarros.model.enums.AtribuicaoEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,13 +13,15 @@ public class Membro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_membro")
     private Long id;
 
     @Column(name = "nome", nullable = false, length = 80)
     private String nome;
 
-    @Column(name = "cargo", nullable = false, length = 80)
-    private String cargo;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "atribuicao", nullable = false)
+    private AtribuicaoEnum atribuicao;
 
     @OneToMany(mappedBy = "membro", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProjetoMembro> projetos;

@@ -2,7 +2,7 @@ package br.com.paulobarros.mock;
 
 import br.com.paulobarros.data.dto.ProjetoDTO;
 import br.com.paulobarros.model.Projeto;
-import br.com.paulobarros.model.StatusProjetoEnum;
+import br.com.paulobarros.model.enums.StatusProjetoEnum;
 
 import java.util.ArrayList;
 import java.util.List;

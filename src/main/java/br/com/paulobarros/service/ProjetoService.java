@@ -18,7 +18,7 @@ import static br.com.paulobarros.mapper.ObjectMapper.parseObject;
 @Service
 public class ProjetoService {
 
-    private Logger logger = LoggerFactory.getLogger(ProjetoService.class);
+    private final Logger logger = LoggerFactory.getLogger(ProjetoService.class);
 
     @Autowired
     private ProjetoRepository repository;
@@ -74,7 +74,7 @@ public class ProjetoService {
         entity.setDataRealTermino(projeto.getDataRealTermino());
         entity.setDataPrevisaoTermino(projeto.getDataPrevisaoTermino());
         entity.setInicio(projeto.getInicio());
-        entity.setResponsavel(projeto.getResponsavel());
+        //entity.setResponsavel(projeto.getResponsavel());
 
         return parseObject(repository.save(entity), ProjetoDTO.class);
     }
