@@ -14,6 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 
 import java.util.List;
@@ -43,15 +47,20 @@ class ProjetoServiceTest {
 
     @Test
     void findById() {
-        Projeto projeto = input.mockEntity(1);
-        projeto.setId(1L);
-        when(repository.findById(1L)).thenReturn(Optional.of(projeto));
+        Projeto entity = new Projeto();
+        entity.setId(1L);
+        entity.setNome("Projeto Teste");
 
-       var result = projetoService.findById(1L);
 
-       assertNotNull(result);
-       assertNotNull(result.getId());
-       assertEquals(projeto, result);
+        when(repository.findById(1L)).thenReturn(Optional.of(entity));
+
+        ProjetoDTO result = projetoService.findById(1L);
+
+
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertEquals(1L, result.getId());
+        assertEquals(entity.getNome(), result.getNome());
     }
 
     @Test
@@ -137,13 +146,18 @@ class ProjetoServiceTest {
     }
 
     @Test
-    @Disabled("Desabilitado por desenvolvimento")
     void findAll() {
+        Pageable pageable = PageRequest.of(0, 10);
         List<Projeto> lista = input.mockEntityList();
-        when(repository.findAll()).thenReturn(lista);
-        //var result = projetoService.findAll(pageble);
-        //assertNotNull(result);
-        //assertEquals(lista.size(), result.size());
+        Page<Projeto> page = new PageImpl<>(lista, pageable, lista.size());
+
+        when(repository.findAll(pageable)).thenReturn(page);
+
+        Page<ProjetoDTO> result = projetoService.findAll(pageable);
+
+        assertNotNull(result);
+        assertEquals(lista.size(), result.getContent().size());
+        assertEquals(lista.size(), result.getTotalElements());
     }
 
 }
