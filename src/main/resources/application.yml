@@ -19,4 +19,7 @@ spring:
     paths-to-match: /gestao-projetos/**/**
     swagger-ui:
       use-root-path: true
+api:
+  membros:
+    base-url: http://localhost:8081/membros-api
 

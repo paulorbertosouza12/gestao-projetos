@@ -44,9 +44,8 @@ public class Projeto implements Serializable {
     @Column(name = "status", nullable = false, length = 30)
     private StatusProjetoEnum status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_gerente_responsavel", nullable = false)
-    private Membro gerenteResponsavel;
+   @Column(name = "id_gerente_responsavel")
+    private Long idGerenteResponsavel;
 
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProjetoMembro> membros;

@@ -18,9 +18,8 @@ public class ProjetoMembro {
     @JoinColumn(name = "id_projeto")
     private Projeto projeto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_membro")
-    private Membro membro;
+    @Column(name = "id_membro")
+    private Long idMembro;
 
 
 }
