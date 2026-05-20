@@ -5,6 +5,7 @@ import br.com.paulobarros.exception.RequiredObjectIsNullException;
 import br.com.paulobarros.mock.MockProjeto;
 import br.com.paulobarros.model.Projeto;
 import br.com.paulobarros.repository.ProjetoRepository;
+import br.com.paulobarros.service.validator.ProjetoValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,9 @@ class ProjetoServiceTest {
 
     @Mock
     ProjetoRepository repository;
+
+    @Mock
+    private ProjetoValidator validator;
 
     @BeforeEach
     void setUp() {
