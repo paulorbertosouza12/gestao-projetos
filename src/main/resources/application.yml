@@ -21,9 +21,11 @@ spring:
       use-root-path: true
 api:
   membros:
-    base-url: http://localhost:8081/membros-api
+    base-url: http://localhost:8080/mock/membros-api
 
 logging:
   level:
     root: INFO
     org.springframework: WARN
+
+

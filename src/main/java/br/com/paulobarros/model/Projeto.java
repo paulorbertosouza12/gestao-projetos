@@ -7,7 +7,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -47,7 +49,20 @@ public class Projeto implements Serializable {
    @Column(name = "id_gerente_responsavel")
     private Long idGerenteResponsavel;
 
-    @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL,orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ProjetoMembro> membros;
+    @OneToMany(
+            mappedBy = "projeto",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<ProjetoMembro> membros = new HashSet<>();
 
+
+    public void adicionarMembro(Long idMembro) {
+        ProjetoMembro projetoMembro = new ProjetoMembro(this, idMembro);
+        this.membros.add(projetoMembro);
+    }
+
+    public void removerMembro(Long idMembro) {
+        this.membros.removeIf(membro -> membro.getIdMembro().equals(idMembro));
+    }
 }

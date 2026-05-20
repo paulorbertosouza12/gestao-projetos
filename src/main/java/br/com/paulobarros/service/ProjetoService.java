@@ -3,17 +3,18 @@ package br.com.paulobarros.service;
 
 import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
-import br.com.paulobarros.exception.BusinessException;
 import br.com.paulobarros.exception.RequiredObjectIsNullException;
 import br.com.paulobarros.model.Projeto;
-import br.com.paulobarros.model.enums.StatusProjetoEnum;
 import br.com.paulobarros.repository.ProjetoRepository;
+import br.com.paulobarros.service.validator.ProjetoValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import static br.com.paulobarros.mapper.ObjectMapper.parseObject;
 
@@ -27,6 +28,9 @@ public class ProjetoService {
     private ProjetoRepository repository;
 
     @Autowired
+    private ProjetoValidator projetoValidator;
+
+    @Autowired
     private  ClassificacaoRiscoService classificacaoRiscoService;
 
     public Page<ProjetoDTO> findAll(Pageable pageble){
@@ -35,8 +39,7 @@ public class ProjetoService {
         var projetos = repository.findAll(pageble);
 
         var projetosDTO = projetos.map(projeto -> {
-            var dto = parseObject(projeto,ProjetoDTO.class);
-            return dto;
+            return parseObject(projeto,ProjetoDTO.class);
         });
 
         return projetosDTO;
@@ -60,26 +63,25 @@ public class ProjetoService {
 
         var entity = parseObject(projeto, Projeto.class);
 
+        projetoValidator.validarCreate(projeto);
 
         return parseObject(repository.save(entity), ProjetoDTO.class);
     }
 
+    @Transactional
     public ProjetoDTO update(ProjetoDTO projeto){
+
+        logger.info("Atualizando projeto: {}", projeto);
 
         if(projeto == null)
             throw new RequiredObjectIsNullException();
 
-        logger.info("Atualizando projeto: {}", projeto);
 
         Projeto entity = repository.findById(projeto.getId()).orElseThrow( () -> new IllegalArgumentException("Projeto não encontrado"));
 
-        entity.setNome(projeto.getNome());
-        entity.setStatus(projeto.getStatus());
-        entity.setDescricao(projeto.getDescricao());
-        entity.setOrcamentoTotal(projeto.getOrcamentoTotal());
-        entity.setDataRealTermino(projeto.getDataRealTermino());
-        entity.setDataPrevisaoTermino(projeto.getDataPrevisaoTermino());
-        entity.setInicio(projeto.getInicio());
+        projetoValidator.validarUpdate(entity, projeto);
+
+        atualizarDadosProjeto(entity, projeto);
 
         return parseObject(repository.save(entity), ProjetoDTO.class);
     }
@@ -88,21 +90,20 @@ public class ProjetoService {
         logger.info("Deletando projeto por id: {}", id);
         Projeto entity = repository.findById(id).orElseThrow( () -> new IllegalArgumentException("Projeto não encontrado"));
 
-        validaExclusaoProjeto(entity);
+        projetoValidator.validarDelete(entity);
 
         repository.delete(entity);
     }
 
-    private void validaExclusaoProjeto(Projeto projeto) {
-        var status = projeto.getStatus();
-        boolean statusExclusaoBloqueada =
-                StatusProjetoEnum.INICIADO.equals(status) ||
-                StatusProjetoEnum.ENCERRADO.equals(status) ||
-                StatusProjetoEnum.EM_ANDAMENTO.equals(status);
-        if (statusExclusaoBloqueada){
-            throw new BusinessException(
-                    String.format("Projeto com status '%s' não pode ser excluído.", status.getDescricao()));
-        }
+    private void atualizarDadosProjeto(Projeto entity, ProjetoDTO projeto) {
+        entity.setNome(projeto.getNome());
+        entity.setStatus(projeto.getStatus());
+        entity.setDescricao(projeto.getDescricao());
+        entity.setOrcamentoTotal(projeto.getOrcamentoTotal());
+        entity.setDataRealTermino(projeto.getDataRealTermino());
+        entity.setDataPrevisaoTermino(projeto.getDataPrevisaoTermino());
+        entity.setInicio(projeto.getInicio());
+        entity.setIdGerenteResponsavel(projeto.getIdGerenteResponsavel());
     }
 
 
@@ -110,4 +111,19 @@ public class ProjetoService {
         ProjetoDTO projeto = findById(idProjeto);
        return classificacaoRiscoService.calcular(projeto);
     }
+
+
+    @Transactional(readOnly = true)
+    public Page<ProjetoDTO> listarPorFiltrosPaginado(ProjetoDTO filter, Pageable pageable) {
+        var spec = repository.filtro(filter);
+
+        Page<Projeto> projetos = repository.findAll(spec, pageable);
+
+        Page<ProjetoDTO> projetosDTO = projetos.map(projeto ->
+                parseObject(projeto, ProjetoDTO.class)
+        );
+
+        return projetosDTO;
+    }
+
 }

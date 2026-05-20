@@ -1,6 +1,5 @@
 package br.com.paulobarros.model;
 
-import br.com.paulobarros.model.enums.AtribuicaoEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,5 +20,13 @@ public class ProjetoMembro {
     @Column(name = "id_membro")
     private Long idMembro;
 
+
+    public ProjetoMembro() {
+    }
+
+    public ProjetoMembro(Projeto projeto, Long idMembro) {
+        this.projeto = projeto;
+        this.idMembro = idMembro;
+    }
 
 }
