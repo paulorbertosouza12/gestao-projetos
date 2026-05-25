@@ -1,9 +1,11 @@
 package br.com.paulobarros.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "projeto_membro")
 public class ProjetoMembro {

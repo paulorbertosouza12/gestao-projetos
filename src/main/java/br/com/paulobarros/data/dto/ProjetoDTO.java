@@ -25,6 +25,6 @@ public class ProjetoDTO implements Serializable {
     private StatusProjetoEnum status;
 
     private Long  idGerenteResponsavel;
-    private List<ProjetoMembroDTO> mebros;
+    private List<ProjetoMembroDTO> alocacaoProjeto;
 
 }

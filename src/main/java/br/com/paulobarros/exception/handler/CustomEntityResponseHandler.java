@@ -3,6 +3,8 @@ package br.com.paulobarros.exception.handler;
 import br.com.paulobarros.exception.ExceptionResponse;
 import br.com.paulobarros.exception.RequiredObjectIsNullException;
 import br.com.paulobarros.exception.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,11 +16,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Date;
 
 @ControllerAdvice
-@RestController
 public class CustomEntityResponseHandler extends ResponseEntityExceptionHandler {
+
+    Logger log = LoggerFactory.getLogger(CustomEntityResponseHandler.class);
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResponse> handleAllExceptions(Exception ex, WebRequest request) {
+        log.error("Erro não tratado", ex);
+
         ExceptionResponse response = new ExceptionResponse(
                 new Date(),
                 ex.getMessage(),

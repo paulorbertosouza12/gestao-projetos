@@ -1,33 +1,32 @@
 package br.com.paulobarros.service;
 
 import br.com.paulobarros.data.dto.ProjetoDTO;
-import br.com.paulobarros.model.Projeto;
+import br.com.paulobarros.mapper.custom.ProjetoMapper;
 import br.com.paulobarros.repository.ProjetoRepository;
 import br.com.paulobarros.service.validator.AlocacaoMembroValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static br.com.paulobarros.mapper.ObjectMapper.parseObject;
-
 @Service
 public class AlocacaoMembroService {
 
+    @Autowired
+    private  ProjetoRepository projetoRepository;
 
-    private final ProjetoRepository projetoRepository;
-    private final MembroClient membroApiClient;
-    private final AlocacaoMembroValidator alocacaoMembroValidator;
+    @Autowired
+    private  MembroClient membroApiClient;
 
-    public AlocacaoMembroService(
-            ProjetoRepository projetoRepository,
-            MembroClient membroApiClient,
-            AlocacaoMembroValidator alocacaoMembroValidator
-    ) {
-        this.projetoRepository = projetoRepository;
-        this.membroApiClient = membroApiClient;
-        this.alocacaoMembroValidator = alocacaoMembroValidator;
-    }
+    @Autowired
+    private  AlocacaoMembroValidator alocacaoMembroValidator;
+
+    @Autowired
+    private ProjetoMapper converter;
+
+
+
 
 
 
@@ -40,9 +39,7 @@ public class AlocacaoMembroService {
 
         projeto.adicionarMembro(membro.getId());
 
-        Projeto projetoSalvo = projetoRepository.save(projeto);
-
-        return parseObject(projetoSalvo, ProjetoDTO.class);
+        return converter.convertEntityToDTO(projetoRepository.save(projeto));
     }
 
     @Transactional
@@ -53,9 +50,7 @@ public class AlocacaoMembroService {
 
         projeto.removerMembro(idMembro);
 
-        Projeto projetoSalvo = projetoRepository.save(projeto);
-
-        return parseObject(projetoSalvo, ProjetoDTO.class);
+        return converter.convertEntityToDTO(projetoRepository.save(projeto));
     }
 
     @Transactional
@@ -64,6 +59,11 @@ public class AlocacaoMembroService {
             alocarMembro(idProjeto, idMembro);
         }
 
-        return parseObject(projetoRepository.findById(idProjeto).orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado")), ProjetoDTO.class);
+        return converter.convertEntityToDTO(projetoRepository.findById(idProjeto).orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado")));
+    }
+
+    @Transactional
+    public ProjetoDTO getByIdProjeto(Long idProjeto){
+        return converter.convertEntityToDTO(projetoRepository.findById(idProjeto).orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado")));
     }
 }

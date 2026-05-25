@@ -2,16 +2,18 @@ package br.com.paulobarros.model;
 
 import br.com.paulobarros.model.enums.StatusProjetoEnum;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "projeto")
 public class Projeto implements Serializable {

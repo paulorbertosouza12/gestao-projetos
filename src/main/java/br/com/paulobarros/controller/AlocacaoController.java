@@ -1,6 +1,6 @@
-package br.com.paulobarros.controllers;
+package br.com.paulobarros.controller;
 
-import br.com.paulobarros.controllers.docs.AlocacaoControllerDocs;
+import br.com.paulobarros.controller.docs.AlocacaoControllerDocs;
 import br.com.paulobarros.data.dto.ProjetoDTO;
 import br.com.paulobarros.service.AlocacaoMembroService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,5 +46,13 @@ public class AlocacaoController implements AlocacaoControllerDocs {
     ) {
         return ResponseEntity.ok(alocacaoMembroService.removerMembro(idProjeto, idMembro));
     }
+
+
+
+   @GetMapping(value = "/{idProjeto}", produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<ProjetoDTO> getByIdProjeto (@PathVariable Long idProjeto){
+        return ResponseEntity.ok(alocacaoMembroService.getByIdProjeto(idProjeto));
+    }
+
 
 }

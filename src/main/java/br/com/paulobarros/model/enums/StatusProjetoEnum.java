@@ -48,7 +48,7 @@ public enum StatusProjetoEnum {
             return false;
         }
 
-        return novoStatus.getOrdem() == this.ordem + 1;
+        return novoStatus.getOrdem() == this.ordem + 1 ;
     }
 
     public boolean permiteExclusao() {

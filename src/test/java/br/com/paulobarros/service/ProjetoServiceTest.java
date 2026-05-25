@@ -2,6 +2,7 @@ package br.com.paulobarros.service;
 
 import br.com.paulobarros.data.dto.ProjetoDTO;
 import br.com.paulobarros.exception.RequiredObjectIsNullException;
+import br.com.paulobarros.mapper.custom.ProjetoMapper;
 import br.com.paulobarros.mock.MockProjeto;
 import br.com.paulobarros.model.Projeto;
 import br.com.paulobarros.repository.ProjetoRepository;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
 class ProjetoServiceTest {
 
@@ -42,6 +43,9 @@ class ProjetoServiceTest {
 
     @Mock
     private ProjetoValidator validator;
+
+    @Spy
+    private ProjetoMapper converter = new ProjetoMapper();
 
     @BeforeEach
     void setUp() {

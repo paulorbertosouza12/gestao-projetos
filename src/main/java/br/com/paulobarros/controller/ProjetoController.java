@@ -1,7 +1,7 @@
-package br.com.paulobarros.controllers;
+package br.com.paulobarros.controller;
 
 
-import br.com.paulobarros.controllers.docs.ProjetoControllerDocs;
+import br.com.paulobarros.controller.docs.ProjetoControllerDocs;
 import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
 import br.com.paulobarros.service.ProjetoService;

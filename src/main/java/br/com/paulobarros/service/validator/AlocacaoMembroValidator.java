@@ -25,15 +25,27 @@ public class AlocacaoMembroValidator {
 
 
     public void validarAlocacao(Projeto projeto, MembroDTO membro) {
+        validaProjeto(projeto);
+        validaMembro(membro);
         validarMembroFuncionario(membro);
         validarLimiteMaximoMembros(projeto);
         validarLimiteMaximoProjetosAtivosPorMembro(membro);
+        validarMembroJaAlocado(projeto, membro);
+    }
 
+    private void validarMembroJaAlocado(Projeto projeto, MembroDTO membro) {
+        if(projeto.getMembros().stream().anyMatch(m -> m.getIdMembro().equals(membro.getId()))){
+            throw new BusinessException("Membro já está alocado ao projeto");
+        }
+    }
 
+    private void validaProjeto(Projeto projeto){
         if(projeto == null) {
             throw new IllegalArgumentException("Projeto não pode ser nulo");
         }
+    }
 
+    private void validaMembro(MembroDTO membro){
         if(membro == null) {
             throw new IllegalArgumentException("Membro não pode ser nulo");
         }

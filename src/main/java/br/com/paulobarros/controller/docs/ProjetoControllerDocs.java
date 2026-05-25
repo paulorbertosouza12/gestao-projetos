@@ -1,4 +1,4 @@
-package br.com.paulobarros.controllers.docs;
+package br.com.paulobarros.controller.docs;
 
 import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
@@ -11,8 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 public interface ProjetoControllerDocs {
     @Operation(summary = "Retorna todos os projetos", tags = "Projeto", responses = {
@@ -93,7 +91,7 @@ public interface ProjetoControllerDocs {
 
 
 
-    @Operation(summary = "Realiza a consulta de Classificação de Risco", tags = "Projeto", responses = {
+    @Operation(summary = "Realiza a consulta de Classificação de Risco", tags = "Classificação", responses = {
             @ApiResponse(
                     description = "Success",
                     responseCode = "200",

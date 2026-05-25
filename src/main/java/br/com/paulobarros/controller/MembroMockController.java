@@ -1,4 +1,4 @@
-package br.com.paulobarros.controllers;
+package br.com.paulobarros.controller;
 
 import br.com.paulobarros.data.dto.MembroDTO;
 import br.com.paulobarros.model.enums.AtribuicaoEnum;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/mock/membros-api/membros")

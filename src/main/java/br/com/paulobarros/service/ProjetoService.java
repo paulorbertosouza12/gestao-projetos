@@ -4,6 +4,7 @@ package br.com.paulobarros.service;
 import br.com.paulobarros.data.dto.ClassificacaoRiscoDTO;
 import br.com.paulobarros.data.dto.ProjetoDTO;
 import br.com.paulobarros.exception.RequiredObjectIsNullException;
+import br.com.paulobarros.mapper.custom.ProjetoMapper;
 import br.com.paulobarros.model.Projeto;
 import br.com.paulobarros.repository.ProjetoRepository;
 import br.com.paulobarros.service.validator.ProjetoValidator;
@@ -31,18 +32,18 @@ public class ProjetoService {
     private ProjetoValidator projetoValidator;
 
     @Autowired
+    private ProjetoMapper converter;
+
+    @Autowired
     private  ClassificacaoRiscoService classificacaoRiscoService;
 
+    @Transactional(readOnly = true)
     public Page<ProjetoDTO> findAll(Pageable pageble){
         logger.info("Buscando todos os projetos");
 
         var projetos = repository.findAll(pageble);
 
-        var projetosDTO = projetos.map(projeto -> {
-            return parseObject(projeto,ProjetoDTO.class);
-        });
-
-        return projetosDTO;
+        return projetos.map(projeto -> converter.convertEntityToDTO(projeto));
     }
 
 
@@ -51,7 +52,7 @@ public class ProjetoService {
 
         var entity = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Projeto não encontrado"));
 
-        return parseObject(entity,ProjetoDTO.class);
+        return converter.convertEntityToDTO(entity);
     }
 
 
@@ -61,11 +62,12 @@ public class ProjetoService {
 
         logger.info("Salvando projeto: {}", projeto);
 
-        var entity = parseObject(projeto, Projeto.class);
+       // var entity = parseObject(projeto, Projeto.class);
+        var entity = converter.convertDTOtoEntity(projeto);
 
         projetoValidator.validarCreate(projeto);
 
-        return parseObject(repository.save(entity), ProjetoDTO.class);
+        return converter.convertEntityToDTO(repository.save(entity));
     }
 
     @Transactional
@@ -83,7 +85,7 @@ public class ProjetoService {
 
         atualizarDadosProjeto(entity, projeto);
 
-        return parseObject(repository.save(entity), ProjetoDTO.class);
+        return converter.convertEntityToDTO(repository.save(entity));
     }
 
     public void delete(Long id){
